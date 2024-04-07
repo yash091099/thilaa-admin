@@ -4,13 +4,14 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-     "dev": "vite",
+    "dev": "vite",
     "start": "vite --open",
     "build": "vite build --outDir build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
   "dependencies": {
+    "@babel/runtime": "^7.24.4",
     "axios": "^1.6.5",
     "chart.js": "^4.4.2",
     "react": "^18.2.0",
