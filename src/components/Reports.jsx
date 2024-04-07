@@ -1,24 +1,78 @@
-import React from 'react'
-import ReportCard from './ReportCard'
-import graph0 from '../assets/Graph0.svg';
-import graph1 from '../assets/Graph1.svg';
-import graph2 from '../assets/Graph2.svg';
+import React, { useEffect, useState } from 'react';
+import ReportCard from './ReportCard';
+import { getReports } from '../context/services/report';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, BarChart, Bar, Legend } from 'recharts';
+import { Loader } from './loader';
+const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 export default function Reports() {
-  return (
-    <div className='flex flex-col gap-[2rem]'>
-        <div className='bg-white rounded-[1rem]'>
-            <h1 className='text-[1.5rem] font-[600] px-[2rem] pt-[2rem]'>Reports</h1>
-            <ReportCard label="Orders Delivered and Rejected" darkHeading={true} value="6000+" filterOptions={["Today"]}>
-                <img className="w-full" src={graph0} alt="img" />
+    const [loading,setLoading] = useState(false);
+    const [reports, setReports] = useState({
+        customers_by_year: [],
+        vendors_by_year: [],
+        revenue_by_year: [],
+        orders_by_year: []
+    });
+    const [showCustomers, setShowCustomers] = useState(true);
+    const [showVendors, setShowVendors] = useState(true);
+    const [showRevenue, setShowRevenue] = useState(true);
+    const [showOrders, setShowOrders] = useState(true);
+
+    useEffect(() => {
+        const fetchReports = async () => {
+            setLoading(true);
+            const response = await getReports();
+
+                setReports(response.data);
+            
+            setLoading(false);
+        };
+        fetchReports();
+    }, []);
+
+    const data = monthNames.map((month, index) => ({
+        month,
+        Customers: reports.customers_by_year[index] || 0,
+        Vendors: reports.vendors_by_year[index] || 0,
+        Revenue: reports.revenue_by_year[index] || 0,
+        Orders: reports.orders_by_year[index] || 0
+    }));
+
+    return (
+        <div className='flex flex-col gap-[2rem] mx-[1rem]'>
+            {loading&&<Loader/>}
+            <div className='bg-white rounded-[1rem] w-full'>
+                <h1 className='text-[1.5rem] font-[600] px-[2rem] pt-[2rem]'>Analytics & Reports</h1>
+                <ReportCard label="Customer and Vendor Statistics" darkHeading={true} value={`Customers: ${reports.customers_by_year.reduce((a, b) => a + b, 0)}, Vendors: ${reports.vendors_by_year.reduce((a, b) => a + b, 0)}`} filterOptions={["Today"]} onClick={() => { setShowCustomers(!showCustomers); setShowVendors(!showVendors); }}>
+                    <LineChart width={1000} height={300} data={data}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="month" />
+                        <YAxis />
+                        <Tooltip />
+                        <Legend />
+                        {showCustomers && <Line type="monotone" dataKey="Customers" stroke="#BCE8B1" strokeWidth={4} />}
+                        {showVendors && <Line type="monotone" dataKey="Vendors" stroke="#A8B6FF" strokeWidth={4} />}
+                    </LineChart>
+                </ReportCard>
+            </div>
+            <ReportCard label="Revenue Report" value={`$ ${reports.revenue_by_year.reduce((a, b) => a + b, 0).toFixed(2)}`} filterOptions={["October"]} onClick={() => setShowRevenue(!showRevenue)}>
+                <LineChart width={1000} height={300} data={data}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="month" />
+                    <YAxis />
+                    <Tooltip />
+                    {showRevenue && <Line type="monotone" dataKey="Revenue" stroke="#BCE8B1" strokeWidth={4} fill="#A8B6FF" />}
+                </LineChart>
+            </ReportCard>
+            <ReportCard label="Orders Report" value={`${reports.orders_by_year.reduce((a, b) => a + b, 0)}`} filterOptions={["October"]} onClick={() => setShowOrders(!showOrders)}>
+                <BarChart width={1000} height={300} data={data}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="month" />
+                    <YAxis />
+                    <Tooltip />
+                    {showOrders && <Bar dataKey="Orders" fill="#A8B6FF" barSize={20} />}
+                </BarChart>
             </ReportCard>
         </div>
-        <ReportCard label="Profit Report" value="₹ 25000" filterOptions={["October"]}>
-            <img className="w-full" src={graph1} alt="img" />
-        </ReportCard>
-        <ReportCard label="Products in Inventory" value="52233" filterOptions={["October"]}>
-            <img className="w-full" src={graph2} alt="img" />
-        </ReportCard>
-    </div>
-  )
+    );
 }

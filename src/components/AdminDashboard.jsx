@@ -4,7 +4,6 @@ import acceptedIcon from '../assets/svg/accepted-orders.svg';
 import rejectedIcon from '../assets/svg/rejected-orders.svg';
 import productsIcon from '../assets/svg/products.svg';
 import revenueIcon from '../assets/svg/revenue.svg';
-import graph from '../assets/Graph1.svg';
 import Table from './Table';
 import ReportCard from './ReportCard';
 import { Loader } from './loader';

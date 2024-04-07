@@ -43,6 +43,8 @@ export default function Login() {
           localStorage.setItem('_u', JSON.stringify(response.data.user_details));
           toast.success(response.data.message, { position: "top-right" });
           navigate("/dashboard");
+        window.location.reload();
+
         } else {
           toast.error(response.data.message || "Login failed", { position: "top-right" });
         }

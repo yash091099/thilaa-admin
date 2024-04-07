@@ -1,96 +1,47 @@
-import React, { useState } from "react";
-import Table from "./Table";
+import React, { useState, useEffect } from "react";
+import Table from "./paginated-table-vendor";
+import filterIcon from '../assets/svg/filter-icon.svg';
 import { useNavigate } from "react-router-dom";
+import {Loader} from './loader';
+import { toast } from 'react-toastify';
+import { getVendors } from "../context/services/vendor";
 
-export default function VendorManagement() {
+export default function UserManagement() {
   const navigate = useNavigate();
-const [newOrder,setNewOrder] = useState(false);
-// columns in table | note:- order matters
-  const columns = [
-    { name: "Order id", enableSorting: true, searchingEnabled: true },
-    { name: "Order Value(₹)", enableSorting: true, searchingEnabled: true },
-    { name: "Items", enableSorting: true, searchingEnabled: true },
-    { name: "PRICE/UNIT (₹)", enableSorting: true, searchingEnabled: true },
-    { name: "Status", enableSorting: true, searchingEnabled: true },
-  ];
+  const [loading, setLoading] = useState(false);
+  const [vendors, setVendors] = useState([]);
 
+  useEffect(() => {
+    setLoading(true);
+    getVendors()
+      .then(response => {
+        setVendors(response.data.vendors);
+        setLoading(false);
+      })
+      .catch(error => {
+        toast.error("Failed to fetch data");
+        setLoading(false);
+      });
+  }, []);
 
-//   provide the actual table body data
-const data = [
-  {
-    'Order id': '#157614075142992',
-    'Order date': '26-10-2023',
-    'Order Value(₹)': '1280.00',
-    'Items': 'Article 1, Article 2, Article 3,Article 1, A....',
-    'Status': 'Created'
-  },
-  {
-    'Order id': '#157614075142992',
-    'Order date': '26-10-2023',
-    'Order Value(₹)': '1280.00',
-    'Items': 'Article 1, Article 2, Article 3,Article 1, A....',
-    'Status': 'Paid'
-  },
-  {
-    'Order id': '#157614075142992',
-    'Order date': '26-10-2023',
-    'Order Value(₹)': '1280.00',
-    'Items': 'Article 1, Article 2, Article 3,Article 1, A....',
-    'Status': 'Fullfilled'
-  },
-  {
-    'Order id': '#157614075142992',
-    'Order date': '26-10-2023',
-    'Order Value(₹)': '1280.00',
-    'Items': 'Article 1, Article 2, Article 3,Article 1, A....',
-    'Status': 'Refund'
-  },
-  {
-    'Order id': '#157614075142992',
-    'Order date': '26-10-2023',
-    'Order Value(₹)': '1280.00',
-    'Items': 'Article 1, Article 2, Article 3,Article 1, A....',
-    'Status': 'Created'
-  },
-  {
-    'Order id': '#157614075142992',
-    'Order date': '26-10-2023',
-    'Order Value(₹)': '1280.00',
-    'Items': 'Article 1, Article 2, Article 3,Article 1, A....',
-    'Status': 'Refund'
-  },
-  {
-    'Order id': '#157614075142992',
-    'Order date': '26-10-2023',
-    'Order Value(₹)': '1280.00',
-    'Items': 'Article 1, Article 2, Article 3,Article 1, A....',
-    'Status': 'Paid'
-  },
-  {
-    'Order id': '#157614075142992',
-    'Order date': '26-10-2023',
-    'Order Value(₹)': '1280.00',
-    'Items': 'Article 1, Article 2, Article 3,Article 1, A....',
-    'Status': 'Paid'
+  if (loading) {
+    return <Loader />;
   }
-];
 
-
-//   map the data to columns | note:- order matters*
-  const mapping = [
-    'Order id',
-    'Order date',
-    'Order Value(₹)',
-    'Items',
-    'Status'
-  ]
-  
-  
+  if (!vendors.length) {
+    return null;
+  }
 
   return (
-      <div className='flex flex-col gap-[2.5rem] bg-white p-[2rem] rounded-[1rem]'>
-        <h1 className='text-text text-[1.5rem] font-[600] tracking-[0.07813rem]'>Vendor Management</h1>
-        <Table columns={columns} data={data} mapping={mapping} fun={()=>{navigate('/dashboard/view-vendor')}} />
+    <div className='flex flex-col gap-[2.5rem] bg-white p-[2rem] rounded-[1rem]'>
+      <div className="flex justify-between">
+        <h1 className='text-text text-[1.5rem] font-[600]'>Vendor Management</h1>
+        {/* <button className='flex gap-[0.25rem] items-center border border-[#89BF2C] px-[1.5rem] py-[0.5rem] rounded-[0.5rem]'>
+          <img src={filterIcon} alt="filter"/>
+          <p className="text-text text-[0.75rem] font-[600]">Filter</p>
+        </button> */}
       </div>
-  )
+      <Table data={vendors} />
+    </div>
+  );
 }
