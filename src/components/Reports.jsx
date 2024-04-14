@@ -11,7 +11,7 @@ export default function Reports() {
         customers_by_year: [],
         vendors_by_year: [],
         revenue_by_year: [],
-        orders_by_year: []
+        total_orders_by_year: []
     });
     const [showCustomers, setShowCustomers] = useState(true);
     const [showVendors, setShowVendors] = useState(true);
@@ -32,10 +32,10 @@ export default function Reports() {
 
     const data = monthNames.map((month, index) => ({
         month,
-        Customers: reports.customers_by_year[index] || 0,
-        Vendors: reports.vendors_by_year[index] || 0,
-        Revenue: reports.revenue_by_year[index] || 0,
-        Orders: reports.orders_by_year[index] || 0
+        Customers: reports.customers_by_year?.[index] || 0,
+        Vendors: reports.vendors_by_year?.[index] || 0,
+        Revenue: reports.revenue_by_year?.[index] || 0,
+        Orders: reports.total_orders_by_year?.[index] || 0
     }));
 
     return (
@@ -64,7 +64,7 @@ export default function Reports() {
                     {showRevenue && <Line type="monotone" dataKey="Revenue" stroke="#BCE8B1" strokeWidth={4} fill="#A8B6FF" />}
                 </LineChart>
             </ReportCard>
-            <ReportCard label="Orders Report" value={`${reports.orders_by_year.reduce((a, b) => a + b, 0)}`} filterOptions={["October"]} onClick={() => setShowOrders(!showOrders)}>
+            <ReportCard label="Orders Report" value={`${reports?.total_orders_by_year?.reduce((a, b) => a + b, 0)}`} filterOptions={["October"]} onClick={() => setShowOrders(!showOrders)}>
                 <BarChart width={1000} height={300} data={data}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="month" />

@@ -83,7 +83,7 @@ export default function Table({ data, customers, vendors }) {
         </table>
       </div>
       <div className='w-full flex justify-between items-center'>
-        <p className='text-[#4B465C]/50 text-[1rem] font-[400] leading-[1.4675rem]'>Showing 1 to {Math.min(10, sortedData.length)} of {customers?customers:vendors}</p>
+        <p className='text-[#4B465C]/50 text-[1rem] font-[400] leading-[1.4675rem]'>Showing {sortedData.length?1:0} to {Math.min(10, sortedData.length)} of {customers?customers:vendors}</p>
       </div>
     </div>
   );
