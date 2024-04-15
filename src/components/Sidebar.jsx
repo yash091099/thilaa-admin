@@ -48,6 +48,12 @@ export default function Sidebar() {
           setActive={setSelectedOption}
           action={() => {navigate('/dashboard/reports')}}
         />        
+        <ListItem
+          label="Delivery Partner Management"
+          activeOption={selectedOption}
+          setActive={setSelectedOption}
+          action={() => {navigate('/dashboard/delivery-partner-management')}}
+        />        
       </div>
     </div>
   );

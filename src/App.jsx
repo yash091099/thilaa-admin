@@ -9,6 +9,10 @@ import Reports from './components/Reports';
 import ViewUser from './components/ViewUser';
 import VendorManagement from './components/VendorManagement';
 import ViewVendor from './components/ViewVendor';
+import Delivery from './components/delivery';
+import DeliveryPartnerDetails from './components/deliveryPartnerDetails';
+import DeliveryPartnerOrderDetails from './components/deliveryPartnerOrderDetails';
+import ViewDeliveryPartner from './components/viewDeliveryPartner';
 
 function App() {
   const isUserLoggedIn = localStorage.getItem('token');
@@ -31,7 +35,11 @@ function App() {
         { path: 'view-user', element: <ViewUser /> },
         { path: 'vendor-management', element: <VendorManagement /> },
         { path: 'view-vendor', element: <ViewVendor /> },
-        { path: 'reports', element: <Reports /> }
+        { path: 'reports', element: <Reports /> },
+        { path: 'delivery-partner-management', element: <Delivery /> },
+        { path: 'delivery-partner-details', element: <ViewDeliveryPartner /> },
+        { path: 'view-delivery-partner', element: <DeliveryPartnerDetails /> },
+        { path: 'view-delivery-partner-order-details', element: <DeliveryPartnerOrderDetails /> }
       ]
     },
   ]);
